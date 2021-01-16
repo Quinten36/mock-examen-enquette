@@ -1,0 +1,8 @@
+#signUpForm, #emailSendPopUp {
+  display: none;
+}
+
+#uuid4 {
+  display: none;
+  user-select: none;
+}

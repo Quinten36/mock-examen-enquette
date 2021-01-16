@@ -24,7 +24,7 @@ require 'php/logic.php';
   </div>
   <div id="formsScreen">
     <div>
-      <form action="" id="signUpForm">
+      <form action="functions.php" method="post" id="signUpForm">
         <fieldset>
           <legend>Sign up</legend>
           <input type="hidden" id="uuid4" name="uuid4">
@@ -45,7 +45,7 @@ require 'php/logic.php';
       </div>
     </div>
     <div>
-      <form action="" id="loginForm">
+      <form action="functions.php" method="post" id="loginForm">
         <fieldset>
           <legend>Login</legend>
             <input type="hidden" id="uuid4" name="uuid4">

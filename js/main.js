@@ -7,12 +7,12 @@ $('a').on('click', function (e) {
   if (choiceFrom == 'signUp') {
     logger('going to signUp', 'orange');
     $('#submitSignUp').attr("disabled", true);
-    document.getElementById('submitSignUp').addEventListener('click', (e) => { e.preventDefault(); })
+    // document.getElementById('submitSignUp').addEventListener('click', (e) => { e.preventDefault(); })
     $('#splashScreen').hide(); $('#formsScreen').show(); $('#signUpForm').show();
   } else if (choiceFrom == 'login') {
     logger('going to login', 'orange');
     $('#submitLogin').attr("disabled", true);
-    document.getElementById('submitLogin').addEventListener('click', (e) => { e.preventDefault(); })
+    // document.getElementById('submitLogin').addEventListener('click', (e) => { e.preventDefault(); })
     $('#splashScreen').hide(); $('#formsScreen').show(); $('#loginForm').show();
 
   } else if (choiceFrom == 'back') {

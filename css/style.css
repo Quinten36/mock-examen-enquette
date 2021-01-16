@@ -1,4 +1,4 @@
-#signUpForm, #emailSendPopUp {
+#formsScreen, #emailSendPopUp, #signUpForm, #loginForm {
   display: none;
 }
 

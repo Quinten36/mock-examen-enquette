@@ -3,6 +3,13 @@
 require 'config.inc.php';
 require 'php/functions.php';
 require 'php/logic.php'; 
+
+function guidv4($data = null)
+{
+  $data = $data ?? random_bytes(16);
+  setcookie('UUID4', $data, time() + (86400 * 30), "/");
+  return $data;
+}
 // require_once 'session.inc.php';
 ?> -->
 <!DOCTYPE html>
@@ -27,7 +34,7 @@ require 'php/logic.php';
       <form action="functions.php" method="post" id="signUpForm">
         <fieldset>
           <legend>Sign up</legend>
-          <input type="hidden" id="uuid4" name="uuid4">
+          <input type="hidden" id="uuid4" name="uuid4" value="<?php echo guidv4(); ?>">
           <label for="">Studentnummer: </label><input type="number" id="stNummerInput" placeholder="Vul hier uw studentnummer in">
           <label for="">Klas: </label><input type="text" id="klasInput" placeholder="Vul hier uw klas in">
           <label for="">Naam: </label><input type="text" id="naamInput" placeholder="Vul hier uw naam in">
@@ -48,7 +55,7 @@ require 'php/logic.php';
       <form action="functions.php" method="post" id="loginForm">
         <fieldset>
           <legend>Login</legend>
-            <input type="hidden" id="uuid4" name="uuid4">
+            <input type="hidden" id="uuid4" name="uuid4" value="<?php echo guidv4(); ?>">
             <label for="emailInput">Email: </label><input type="text" id="emailInput">
             <label for="passwordInput">Password: </label><input type="password" id="passwordInput">
             <input type="submit" value="Verzenden" id="submitLogin">

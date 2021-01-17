@@ -1,4 +1,8 @@
-<!-- <?php 
+<?php 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 //controller eerst de verbinding
 require 'config.inc.php';
 require 'php/functions.php';
@@ -11,7 +15,7 @@ function guidv4($data = null)
   return $data;
 }
 // require_once 'session.inc.php';
-?> -->
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,19 +35,19 @@ function guidv4($data = null)
   </div>
   <div id="formsScreen">
     <div>
-      <form action="functions.php" method="post" id="signUpForm">
+      <form action="" method="post" id="signUpForm">//functions.php?form=signUp
         <fieldset>
           <legend>Sign up</legend>
           <input type="hidden" id="uuid4" name="uuid4" value="<?php echo guidv4(); ?>">
-          <label for="">Studentnummer: </label><input type="number" id="stNummerInput" placeholder="Vul hier uw studentnummer in">
-          <label for="">Klas: </label><input type="text" id="klasInput" placeholder="Vul hier uw klas in">
-          <label for="">Naam: </label><input type="text" id="naamInput" placeholder="Vul hier uw naam in">
-          <label for="">Adres: </label><input type="text" id="adresInput" placeholder="Vul hier uw adres in">
-          <label for="">Postcode: </label><input type="text" id="postcodeInput" placeholder="Vul hier uw postcode in">
-          <label for="">Woonplaats: </label><input type="text" id="woonplaatsInput" placeholder="Vul hier uw woonplaats in">
-          <label for="">Leeftijd: </label><input type="number" id="leeftijdInput" placeholder="Vul hier uw leeftijd in">
-          <label for="">Email: </label><input type="email" id="emailInput" placeholder="Vul hier uw email in">
-          <input type="submit" value="Verzenden" id="submitSignUp">
+          <label for="">Studentnummer: </label><input type="number" id="stNummerInput" name="studentnummer" placeholder="Vul hier uw studentnummer in">
+          <label for="">Klas: </label><input type="text" id="klasInput" name="klas" placeholder="Vul hier uw klas in">
+          <label for="">Naam: </label><input type="text" id="naamInput" name="naam" placeholder="Vul hier uw naam in">
+          <label for="">Adres: </label><input type="text" id="adresInput" name="adres" placeholder="Vul hier uw adres in">
+          <label for="">Postcode: </label><input type="text" id="postcodeInput" name="postcode" placeholder="Vul hier uw postcode in">
+          <label for="">Woonplaats: </label><input type="text" id="woonplaatsInput" name="woonplaats" placeholder="Vul hier uw woonplaats in">
+          <label for="">Leeftijd: </label><input type="number" id="leeftijdInput" name="leeftijd" placeholder="Vul hier uw leeftijd in">
+          <label for="">Email: </label><input type="email" id="emailInput" name="email" placeholder="Vul hier uw email in">
+          <input type="submit" value="Verzenden" id="submitSignUp" name="submitSignUp">
         </fieldset>
       </form>
       <div id="emailSendPopUp">
@@ -52,13 +56,13 @@ function guidv4($data = null)
       </div>
     </div>
     <div>
-      <form action="functions.php" method="post" id="loginForm">
+      <form action="" method="post" id="loginForm">
         <fieldset>
           <legend>Login</legend>
             <input type="hidden" id="uuid4" name="uuid4" value="<?php echo guidv4(); ?>">
             <label for="emailInput">Email: </label><input type="text" id="emailInput">
             <label for="passwordInput">Password: </label><input type="password" id="passwordInput">
-            <input type="submit" value="Verzenden" id="submitLogin">
+            <input type="submit" value="Verzenden" id="submitLogin" name="submitLogin">
         </fieldset>
       </form>
     </div>
@@ -67,3 +71,65 @@ function guidv4($data = null)
   <script src="js/main.js"></script>
 </body>
 </html>
+<?php
+//sign Up
+if(isset($_POST['submitSignUp'])){ //check if form was submitted
+  //controle data
+  $studentnummer  = $_POST['studentnummer'];
+  $klas           = $_POST['klas'];
+  $naam           = $_POST['naam'];
+  $adres          = $_POST['adres'];
+  $postcode       = $_POST['postcode'];
+  $woonplaats     = $_POST['woonplaats'];
+  $leeftijd       = $_POST['leeftijd'];
+  $email          = $_POST['email'];
+  if (strlen($studentnummer) > 0 &&
+  strlen($klas) > 0 &&
+  strlen($naam) > 0 &&
+  strlen($adres) > 0 &&
+  strlen($postcode) > 0 &&
+  strlen($woonplaats) > 0 &&
+  strlen($leeftijd) > 0 &&
+  strlen($email) > 0)
+// kijken of gegevens niet leeg zijn
+{
+
+}
+else {
+    $foutmelding = "";
+    if (strlen($studentnummer) < 2) {
+      $foutmelding .= "geen studentnummer ingevuld <br>";
+    }
+    else if (strlen($klas) < 2) {
+      $foutmelding .= "geen klas ingevuld <br>";
+    }
+    else if (strlen($naam) < 0) {
+      $foutmelding .= "geen naam ingevuld <br>";
+    }
+    else if (strlen($adres) < 0) {
+      $foutmelding .= "geen adres ingevuld <br>";
+    }
+    else if (strlen($postcode) == 0) {
+      $foutmelding .= "geen postcode ingevuld <br>";
+    } 
+    else if (strlen($woonplaats) < 0) {
+      $foutmelding .= "geen woonplaats ingevuld <br>";
+    }
+    else if (strlen($leeftijd) < 0) {
+      $foutmelding .= "geen leeftijd ingevuld <br>";
+    }
+    else if (strlen($email) == 0) {
+      $foutmelding .= "geen email ingevuld <br>";
+    }
+      echo $foutmelding;
+    }
+
+  echo 'haai'; 
+}    
+
+//Log in
+if(isset($_POST['submitLogin'])){ //check if form was submitted
+  //controle data
+  echo 'haai'; 
+}   
+?>

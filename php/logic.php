@@ -13,9 +13,13 @@ class formValueCheck {
   public $email;
   private $password;
 
-  function __construct() {
+  function __construct($_name, $_stNummer, $_klas, $_naam, $_adres, $_postcode, $_woonplaats, $_leeftijd, $_email) {
 
   }
 
   //funcion voor controle UUID
+
+  
 }
+
+//class voor login

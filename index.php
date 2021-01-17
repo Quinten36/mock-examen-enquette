@@ -5,15 +5,22 @@ error_reporting(E_ALL);
 
 //controller eerst de verbinding
 require 'config.inc.php';
-require 'php/functions.php';
-require 'php/logic.php'; 
+include('php/functions.php');
+include 'php/logic.php'; 
 
-function guidv4($data = null)
-{
-  $data = $data ?? random_bytes(16);
-  setcookie('UUID4', $data, time() + (86400 * 30), "/");
-  return $data;
+function uniqidReal($lenght = 13) {
+  // uniqid gives 13 chars, but you could adjust it to your needs.
+  if (function_exists("random_bytes")) {
+      $bytes = random_bytes(ceil($lenght / 2));
+  } elseif (function_exists("openssl_random_pseudo_bytes")) {
+      $bytes = openssl_random_pseudo_bytes(ceil($lenght / 2));
+  } else {
+      throw new Exception("no cryptographically secure random function available");
+  }
+  return substr(bin2hex($bytes), 0, $lenght);
 }
+$uuid = uniqidReal();
+
 // require_once 'session.inc.php';
 ?>
 <!DOCTYPE html>
@@ -38,7 +45,7 @@ function guidv4($data = null)
       <form action="" method="post" id="signUpForm">//functions.php?form=signUp
         <fieldset>
           <legend>Sign up</legend>
-          <input type="hidden" id="uuid4" name="uuid4" value="<?php echo guidv4(); ?>">
+          <input type="hidden" id="uuid4" name="uuid4" value="<?php echo $uuid ?>">
           <label for="">Studentnummer: </label><input type="number" id="stNummerInput" name="studentnummer" placeholder="Vul hier uw studentnummer in">
           <label for="">Klas: </label><input type="text" id="klasInput" name="klas" placeholder="Vul hier uw klas in">
           <label for="">Naam: </label><input type="text" id="naamInput" name="naam" placeholder="Vul hier uw naam in">
@@ -59,7 +66,7 @@ function guidv4($data = null)
       <form action="" method="post" id="loginForm">
         <fieldset>
           <legend>Login</legend>
-            <input type="hidden" id="uuid4" name="uuid4" value="<?php echo guidv4(); ?>">
+            <input type="hidden" id="uuid4" name="uuid4" value="<?php echo $uuid; ?>">
             <label for="emailInput">Email: </label><input type="text" id="emailInput">
             <label for="passwordInput">Password: </label><input type="password" id="passwordInput">
             <input type="submit" value="Verzenden" id="submitLogin" name="submitLogin">
@@ -93,7 +100,7 @@ if(isset($_POST['submitSignUp'])){ //check if form was submitted
   strlen($email) > 0)
 // kijken of gegevens niet leeg zijn
 {
-
+  $user = new formValueCheck();
 }
 else {
     $foutmelding = "";

@@ -1,6 +1,14 @@
 <?php
+require "PHPMailer/PHPMailerAutoload.php";
+require 'envHandler.php';
 
-class formValueCheck {
+$env = new DotEnv(__DIR__ . '/../.env');
+$env->load();
+
+echo (extension_loaded('openssl')?'SSL loaded':'SSL not loaded')."\n";
+
+
+class registerProfile {
 //uuid?
   private $uuid;
   public $name;
@@ -27,60 +35,87 @@ class formValueCheck {
     $dbh = new Dbh;
     $pdo = $dbh->connect();
     $this->pdo = $pdo;
+    $this->password = $this->randomPassword();
   }
 
   //funcion voor controle UUID
-  function insertDB() {
-    // $prep = "INSERT INTO `mock-exam`(`uuid`, `name`, `stNummer`, `klas`, `adres`, `postcode`, `woonplaats`, `leeftijd`, `email`) 
-    // VALUES ((:uuid),(:name),(:stNummer),(:klas),(:adres),(:postcode),(:woonplaats),(:leeftijd),(:email))";
-    // // $prep = "SELECT * FROM `veipro` WHERE `name` = (:username) AND `password` = (:password)";
-    // $stmt = $this->pdo->prepare($prep);
-    // $stmt->bindParam(':uuid', $verifiedName);
-    // $stmt->bindParam(':name', $verifiedPassword);
-    // $stmt->bindParam(':stNummer', $verifiedName);
-    // $stmt->bindParam(':klas', $verifiedPassword);
-    // $stmt->bindParam(':adres', $verifiedName);
-    // $stmt->bindParam(':postcode', $verifiedPassword);
-    // $stmt->bindParam(':woonplaats', $verifiedName);
-    // $stmt->bindParam(':leeftijd', $verifiedPassword);
-    // $stmt->bindParam(':email', $verifiedPassword);
-    // $stmt->execute();
+
+  function smtpmailer($to, $from, $from_name, $subject, $body)
+  {
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->SMTPDebug = 0;
+    $mail->Debugoutput = 'html';
+    $mail->SMTPAuth = true; 
+
+    $mail->SMTPSecure = 'tls'; 
+    $mail->Host = 'smtp.gmail.com';
+    $mail->Port = 587;  
+    $mail->Username = 'qkempers36@gmail.com';
+    $mail->Password = getenv('MAILERPW');   
+
+    $mail->IsHTML(true);
+    $mail->From="qkempers36@gmail.com";
+    $mail->FromName=$from_name;
+    $mail->Sender=$from;
+    $mail->AddReplyTo($from, $from_name);
+    $mail->Subject = $subject;
+    $mail->Body = $body;
+    $mail->AddAddress($to);
+    if(!$mail->Send())
+    {
+      $error ="Please try Later, Error Occured while Processing...";
+      // var_dump($mail);
+      return $error; 
+    }
+    else 
+    {
+      $error = "Thanks You !! Your email is sent.";  
+      return $error;
+    }
   }
 
-  function mailSend() {
-    // $to = "q.kempers@outlook.com, qkempers36@gmail.com";
-    // $subject = "HTML email";
+  function randomPassword() {
+    $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    $pass = array(); //remember to declare $pass as an array
+    $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+    for ($i = 0; $i < 8; $i++) {
+        $n = rand(0, $alphaLength);
+        $pass[] = $alphabet[$n];
+    }
+    return implode('',$pass); //turn the array into a string
+  }
 
-    // $message = "
-    // <html>
-    // <head>
-    // <title>HTML email</title>
-    // </head>
-    // <body>
-    // <p>This email contains HTML Tags!</p>
-    // <table>
-    // <tr>
-    // <th>Firstname</th>
-    // <th>Lastname</th>
-    // </tr>
-    // <tr>
-    // <td>John</td>
-    // <td>Doe</td>
-    // </tr>
-    // </table>
-    // </body>
-    // </html>
-    // ";
+  function mainHandler() {
+    $to   = $this->email;
+    $from = 'qkempers36@gmail.com';
+    $name = 'Quinten Kempers';
+    $subj = 'PHPMailer 5.2 testing from DomainRacer';
+    //random password gen
+   
+    $msg = 'This is mail about testing mailing using PHP.\n Your password is: '. $this->password;
+    
+    $error=$this->smtpmailer($to,$from, $name ,$subj, $msg);
+    echo $error;
+  } 
 
-    // // Always set content-type when sending HTML email
-    // $headers = "MIME-Version: 1.0" . "\r\n";
-    // $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
-    // // More headers
-    // $headers .= 'From: <webmaster@example.com>' . "\r\n";
-    // $headers .= 'Cc: 83502@glr.nl' . "\r\n";
-
-    // mail($to,$subject,$message,$headers);
+  function insertDB() {
+    $prep = "INSERT INTO `mock-exam` (`uuid`, `name`, `stNummer`, `klas`, `adres`, `postcode`, `woonplaats`, `leeftijd`, `email`, `password`) 
+    VALUES ((:uuid),(:name),(:stNummer),(:klas),(:adres),(:postcode),(:woonplaats),(:leeftijd),(:email),(:password))";
+    // $prep = "SELECT * FROM `veipro` WHERE `name` = (:username) AND `password` = (:password)";
+    $stmt = $this->pdo->prepare($prep);
+    $stmt->bindParam(':uuid', $this->uuid);
+    $stmt->bindParam(':name', $this->name);
+    $stmt->bindParam(':stNummer', $this->stNummer);
+    $stmt->bindParam(':klas', $this->klas);
+    $stmt->bindParam(':adres', $this->adres);
+    $stmt->bindParam(':postcode', $this->postcode);
+    $stmt->bindParam(':woonplaats', $this->woonplaats);
+    $stmt->bindParam(':leeftijd', $this->leeftijd);
+    $stmt->bindParam(':email', $this->email);
+    $stmt->bindParam(':password', $this->password);
+    $stmt->execute();
+    var_dump($stmt->execute());
   }
   
 }

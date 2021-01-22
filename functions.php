@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-echo 'as';
+// echo 'as';
 
 function uniqidReal($lenght = 13) {
   // uniqid gives 13 chars, but you could adjust it to your needs.

@@ -127,8 +127,8 @@ if(isset($_POST['submitSignUp'])){
     // kijken of gegevens niet leeg zijn
     {
       echo 'goed';
-      $user = new formValueCheck($uuid, $naam,$studentnummer,$klas,$adres,$postcode,$woonplaats,$leeftijd,$email);
-      $user->mailSend();
+      $user = new registerProfile($uuid, $naam,$studentnummer,$klas,$adres,$postcode,$woonplaats,$leeftijd,$email);
+      $user->mainHandler();
       $user->insertDB();
       //class function for pushing to DB
 }

@@ -1,21 +1,30 @@
 <?php
-## database logingegevens ##
-$db_hostname = 'localhost';
-$db_username = '83502';
-$db_password = 'xS33&j3hYajj06*99vud^0M6';
-//--> Bijv. :: https://passwordsgenerator.net/
-$db_database = '83502_DB';
+//zorgen dat je gegevens in andere file zet
+class Dbh {
 
-## maak de database-verbinding ##
-$mysqli = new mysqli($db_hostname, $db_username, $db_password, $db_database);
+    protected $server;
+    protected $username;
+    protected $password;
+    protected $table;
+    protected $engine;
+    protected $charset = "testdb";
 
-## controleer connectie ##
-if ($mysqli -> connect_errno) {
-    printf("Connect failed: %s\n", $mysqli->connect_error);
-    exit();
+
+    public function connect() {
+        $this->server = 'localhost';
+        $this->username = '83502';
+        $this->password = "xS33&j3hYajj06*99vud^0M6";
+        $this->table = '83502_DB';
+        $this->charset = 'utf8mb4';
+        $this->engine = "MySqli";
+
+        try {
+            $dsn = "mysql:host=".$this->server.";dbname=".$this->table.";charset=".$this->charset;//.";engine=".$this->engine;
+            $pdo = new PDO($dsn, $this->username, $this->password);
+            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            return $pdo;
+        } catch (Exception $e) {
+            echo "Connection failed: ".$e->getMessage();
+        }
+    }
 }
-
-##  Nu zorg ik ervoor dat de bovenstaande user/pass niet later op de pagina ##
-##  waar deze ge-included wordt, uitgelezen kan worden. ##
-unset($db_username, $db_password);
-?>

@@ -8,18 +8,42 @@ require 'config.inc.php';
 include('php/functions.php');
 include 'php/logic.php'; 
 
-function uniqidReal($lenght = 13) {
-  // uniqid gives 13 chars, but you could adjust it to your needs.
-  if (function_exists("random_bytes")) {
-      $bytes = random_bytes(ceil($lenght / 2));
-  } elseif (function_exists("openssl_random_pseudo_bytes")) {
-      $bytes = openssl_random_pseudo_bytes(ceil($lenght / 2));
-  } else {
-      throw new Exception("no cryptographically secure random function available");
-  }
-  return substr(bin2hex($bytes), 0, $lenght);
+// function uniqidReal($lenght = 13) {
+//   // uniqid gives 13 chars, but you could adjust it to your needs.
+//   if (function_exists("random_bytes")) {
+//       $bytes = random_bytes(ceil($lenght / 2));
+//   } elseif (function_exists("openssl_random_pseudo_bytes")) {
+//       $bytes = openssl_random_pseudo_bytes(ceil($lenght / 2));
+//   } else {
+//       throw new Exception("no cryptographically secure random function available");
+//   }
+//   return substr(bin2hex($bytes), 0, $lenght);
+// }
+
+function v4() {
+  return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+
+    // 32 bits for "time_low"
+    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+
+    // 16 bits for "time_mid"
+    mt_rand(0, 0xffff),
+
+    // 16 bits for "time_hi_and_version",
+    // four most significant bits holds version number 4
+    mt_rand(0, 0x0fff) | 0x4000,
+
+    // 16 bits, 8 bits for "clk_seq_hi_res",
+    // 8 bits for "clk_seq_low",
+    // two most significant bits holds zero and one for variant DCE1.1
+    mt_rand(0, 0x3fff) | 0x8000,
+
+    // 48 bits for "node"
+    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+  );
 }
-$uuid = uniqidReal();
+
+$uuid = v4();
 
 // require_once 'session.inc.php';
 ?>
@@ -42,7 +66,7 @@ $uuid = uniqidReal();
   </div>
   <div id="formsScreen">
     <div>
-      <form action="" method="post" id="signUpForm">//functions.php?form=signUp
+      <form action="" method="post" id="signUpForm"><!--//functions.php?form=signUp-->
         <fieldset>
           <legend>Sign up</legend>
           <input type="hidden" id="uuid4" name="uuid4" value="<?php echo $uuid ?>">
@@ -80,8 +104,10 @@ $uuid = uniqidReal();
 </html>
 <?php
 //sign Up
-if(isset($_POST['submitSignUp'])){ //check if form was submitted
+if(isset($_POST['submitSignUp'])){ 
   //controle data
+  echo 'binnen';
+  $uuid           = $_POST['uuid4'];
   $studentnummer  = $_POST['studentnummer'];
   $klas           = $_POST['klas'];
   $naam           = $_POST['naam'];
@@ -91,16 +117,20 @@ if(isset($_POST['submitSignUp'])){ //check if form was submitted
   $leeftijd       = $_POST['leeftijd'];
   $email          = $_POST['email'];
   if (strlen($studentnummer) > 0 &&
-  strlen($klas) > 0 &&
-  strlen($naam) > 0 &&
-  strlen($adres) > 0 &&
-  strlen($postcode) > 0 &&
-  strlen($woonplaats) > 0 &&
-  strlen($leeftijd) > 0 &&
-  strlen($email) > 0)
-// kijken of gegevens niet leeg zijn
-{
-  $user = new formValueCheck();
+      strlen($klas) > 0 &&
+      strlen($naam) > 0 &&
+      strlen($adres) > 0 &&
+      strlen($postcode) > 0 &&
+      strlen($woonplaats) > 0 &&
+      strlen($leeftijd) > 0 &&
+      strlen($email) > 0)
+    // kijken of gegevens niet leeg zijn
+    {
+      echo 'goed';
+      $user = new formValueCheck($uuid, $naam,$studentnummer,$klas,$adres,$postcode,$woonplaats,$leeftijd,$email);
+      $user->mailSend();
+      $user->insertDB();
+      //class function for pushing to DB
 }
 else {
     $foutmelding = "";
@@ -130,8 +160,6 @@ else {
     }
       echo $foutmelding;
     }
-
-  echo 'haai'; 
 }    
 
 //Log in

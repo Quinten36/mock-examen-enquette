@@ -8,17 +8,10 @@ require 'config.inc.php';
 include('php/functions.php');
 include 'php/logic.php'; 
 
-// function uniqidReal($lenght = 13) {
-//   // uniqid gives 13 chars, but you could adjust it to your needs.
-//   if (function_exists("random_bytes")) {
-//       $bytes = random_bytes(ceil($lenght / 2));
-//   } elseif (function_exists("openssl_random_pseudo_bytes")) {
-//       $bytes = openssl_random_pseudo_bytes(ceil($lenght / 2));
-//   } else {
-//       throw new Exception("no cryptographically secure random function available");
-//   }
-//   return substr(bin2hex($bytes), 0, $lenght);
-// }
+if(isset($_COOKIE['uuid'])) {
+  header('Location: enquette.php', true, 303);
+  die();
+}
 
 function v4() {
   return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -177,9 +170,4 @@ if(isset($_POST['submitSignUp'])){
   }
 }
 
-//Log in
-if(isset($_POST['submitLogin'])){ //check if form was submitted
-  //controle data
-  echo 'haai'; 
-}   
 ?>

@@ -112,16 +112,25 @@ class registerProfile {
     $stmt->bindParam(':leeftijd', $this->leeftijd);
     $stmt->bindParam(':email', $this->email);
     // $stmt->bindParam(':password', $this->password);
-    $stmt->execute();
-    var_dump($stmt->execute());
+    // $stmt->execute();
 
-    $prep2 = "INSERT INTO `mock-exam-login` (`uuid`, `email`, `password`) 
-    VALUES ((:uuid),(:email),(:password))";
+    $prep2 = "INSERT INTO `mock-exam-login` (`uuid`, `email`, `password`, `level`) 
+    VALUES ((:uuid),(:email),(:password),0)";
     $stmt2 = $this->pdo->prepare($prep2);
     $stmt2->bindParam(':uuid', $this->uuid);
     $stmt2->bindParam(':email', $this->email);
     $stmt2->bindParam(':password', $this->password);
-    $stmt2->execute();
+    // $stmt2->execute();
+    if ($stmt2->execute()) {
+      if ($stmt->execute()) {
+        setcookie('uuid', $this->uuid, time() + (86400 * 30), "/"); // 86400 = 1 day
+        echo 'inserted';
+      } else {
+        echo 'first fail';
+      }
+    } else {
+      echo 'second fail';
+    }
   }
   
 }
@@ -150,16 +159,16 @@ class loginHandler {
     //encrypten?
     $foutmelding = "";
 
-    $prep = "SELECT `uuid`, `email`, `password`, `level` FROM `mock-exam-login` WHERE 1";
+    $prep = "SELECT `uuid`, `email`, `password`, `level` FROM `mock-exam-login` WHERE `email` = (:email)";
     $stmt = $this->pdo->prepare($prep);
-    $stmt->bindParam('uuid', $this->uuid);
     $stmt->bindParam('email', $this->email);
-    $stmt->bindParam('password', $this->password);
     $stmt->execute();
     $res = $stmt->fetch();
     if ($res['email'] == $this->email) {
       if ($res['password'] == $this->password) {
         //redirect naar enquette site
+        setcookie('uuid', $this->uuid, time() + (86400 * 30), "/"); // 86400 = 1 day
+        header('Location: enquette.php', true, 303);
         echo 'login done';
       } else {
         $foutmelding .= "geen gelding wachtwoord ingevuld";

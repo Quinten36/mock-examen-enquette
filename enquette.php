@@ -2,6 +2,15 @@
 //checken of je bent ingelogd
 //checken welk level sec je heb
   //misschien preloader while level check?
+
+
+
+
+  if(isset($_GET['logout'])) {
+    setcookie('uuid', null, 0, '/');    
+    header('Location: index.php');
+    exit;
+  }
 ?>
 
 <!DOCTYPE html>
@@ -13,5 +22,6 @@
 </head>
 <body>
   <h1>Dit is de enquette</h1>
+  <a href="?logout">logout</a>
 </body>
 </html>

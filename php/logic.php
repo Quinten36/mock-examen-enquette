@@ -20,7 +20,7 @@ class registerProfile {
   public $leeftijd;
   public $email;
   private $password;
-  private $pdo;
+  protected $pdo;
 
   function __construct($_uuid, $_name, $_stNummer, $_klas, $_adres, $_postcode, $_woonplaats, $_leeftijd, $_email) {
     $this->uuid = $_uuid;
@@ -37,8 +37,6 @@ class registerProfile {
     $this->pdo = $pdo;
     $this->password = $this->randomPassword();
   }
-
-  //funcion voor controle UUID
 
   function smtpmailer($to, $from, $from_name, $subject, $body)
   {
@@ -100,8 +98,8 @@ class registerProfile {
   } 
 
   function insertDB() {
-    $prep = "INSERT INTO `mock-exam` (`uuid`, `name`, `stNummer`, `klas`, `adres`, `postcode`, `woonplaats`, `leeftijd`, `email`, `password`) 
-    VALUES ((:uuid),(:name),(:stNummer),(:klas),(:adres),(:postcode),(:woonplaats),(:leeftijd),(:email),(:password))";
+    $prep = "INSERT INTO `mock-exam` (`uuid`, `name`, `stNummer`, `klas`, `adres`, `postcode`, `woonplaats`, `leeftijd`, `email`) 
+    VALUES ((:uuid),(:name),(:stNummer),(:klas),(:adres),(:postcode),(:woonplaats),(:leeftijd),(:email))";
     // $prep = "SELECT * FROM `veipro` WHERE `name` = (:username) AND `password` = (:password)";
     $stmt = $this->pdo->prepare($prep);
     $stmt->bindParam(':uuid', $this->uuid);
@@ -113,11 +111,62 @@ class registerProfile {
     $stmt->bindParam(':woonplaats', $this->woonplaats);
     $stmt->bindParam(':leeftijd', $this->leeftijd);
     $stmt->bindParam(':email', $this->email);
-    $stmt->bindParam(':password', $this->password);
+    // $stmt->bindParam(':password', $this->password);
     $stmt->execute();
     var_dump($stmt->execute());
+
+    $prep2 = "INSERT INTO `mock-exam-login` (`uuid`, `email`, `password`) 
+    VALUES ((:uuid),(:email),(:password))";
+    $stmt2 = $this->pdo->prepare($prep2);
+    $stmt2->bindParam(':uuid', $this->uuid);
+    $stmt2->bindParam(':email', $this->email);
+    $stmt2->bindParam(':password', $this->password);
+    $stmt2->execute();
   }
   
 }
 
 //class voor login
+
+class loginHandler {
+  private $uuid;
+  public $email;
+  private $password;
+  protected $pdo;
+
+  function __construct($_uuid, $_email, $_password) {
+    $this->uuid = $_uuid;
+    $this->email = $_email;
+    $this->password = $_password;
+    $dbh = new Dbh;
+    $pdo = $dbh->connect();
+    $this->pdo = $pdo;
+  }
+
+  function loginCheck() {
+    //haal gegevens op
+    //kijk of username bestaat
+    //kijk bij die username het password
+    //encrypten?
+    $foutmelding = "";
+
+    $prep = "SELECT `uuid`, `email`, `password`, `level` FROM `mock-exam-login` WHERE 1";
+    $stmt = $this->pdo->prepare($prep);
+    $stmt->bindParam('uuid', $this->uuid);
+    $stmt->bindParam('email', $this->email);
+    $stmt->bindParam('password', $this->password);
+    $stmt->execute();
+    $res = $stmt->fetch();
+    if ($res['email'] == $this->email) {
+      if ($res['password'] == $this->password) {
+        //redirect naar enquette site
+        echo 'login done';
+      } else {
+        $foutmelding .= "geen gelding wachtwoord ingevuld";
+      }
+    } else {
+      $foutmelding .= "geen geldig email ingevuld";
+    }
+    echo '\n<br>'.$foutmelding;
+  }
+}

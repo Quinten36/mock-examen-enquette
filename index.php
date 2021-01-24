@@ -91,8 +91,8 @@ $uuid = v4();
         <fieldset>
           <legend>Login</legend>
             <input type="hidden" id="uuid4" name="uuid4" value="<?php echo $uuid; ?>">
-            <label for="emailInput">Email: </label><input type="text" id="emailInput">
-            <label for="passwordInput">Password: </label><input type="password" id="passwordInput">
+            <label for="emailInput">Email: </label><input type="text" id="emailInput" name="email" placeholder="Vul hier uw email in">
+            <label for="passwordInput">Password: </label><input type="password" id="passwordInput" name="password" placeholder="Vul hier uw password in">
             <input type="submit" value="Verzenden" id="submitLogin" name="submitLogin">
         </fieldset>
       </form>
@@ -106,7 +106,6 @@ $uuid = v4();
 //sign Up
 if(isset($_POST['submitSignUp'])){ 
   //controle data
-  echo 'binnen';
   $uuid           = $_POST['uuid4'];
   $studentnummer  = $_POST['studentnummer'];
   $klas           = $_POST['klas'];
@@ -117,50 +116,66 @@ if(isset($_POST['submitSignUp'])){
   $leeftijd       = $_POST['leeftijd'];
   $email          = $_POST['email'];
   if (strlen($studentnummer) > 0 &&
-      strlen($klas) > 0 &&
-      strlen($naam) > 0 &&
-      strlen($adres) > 0 &&
-      strlen($postcode) > 0 &&
-      strlen($woonplaats) > 0 &&
-      strlen($leeftijd) > 0 &&
-      strlen($email) > 0)
-    // kijken of gegevens niet leeg zijn
-    {
-      echo 'goed';
-      $user = new registerProfile($uuid, $naam,$studentnummer,$klas,$adres,$postcode,$woonplaats,$leeftijd,$email);
-      $user->mainHandler();
-      $user->insertDB();
-      //class function for pushing to DB
-}
-else {
+    strlen($klas) > 0 &&
+    strlen($naam) > 0 &&
+    strlen($adres) > 0 &&
+    strlen($postcode) > 0 &&
+    strlen($woonplaats) > 0 &&
+    strlen($leeftijd) > 0 &&
+    strlen($email) > 0)
+  // kijken of gegevens niet leeg zijn
+  {
+    $user = new registerProfile($uuid, $naam,$studentnummer,$klas,$adres,$postcode,$woonplaats,$leeftijd,$email);
+    $user->mainHandler();
+    $user->insertDB();
+    //class function for pushing to DB
+} else {
+  $foutmelding = "";
+  if (strlen($studentnummer) < 2) {
+    $foutmelding .= "geen studentnummer ingevuld <br>";
+  }
+  else if (strlen($klas) < 2) {
+    $foutmelding .= "geen klas ingevuld <br>";
+  }
+  else if (strlen($naam) < 0) {
+    $foutmelding .= "geen naam ingevuld <br>";
+  }
+  else if (strlen($adres) < 0) {
+    $foutmelding .= "geen adres ingevuld <br>";
+  }
+  else if (strlen($postcode) == 0) {
+    $foutmelding .= "geen postcode ingevuld <br>";
+  } 
+  else if (strlen($woonplaats) < 0) {
+    $foutmelding .= "geen woonplaats ingevuld <br>";
+  }
+  else if (strlen($leeftijd) < 0) {
+    $foutmelding .= "geen leeftijd ingevuld <br>";
+  }
+  else if (strlen($email) == 0) {
+    $foutmelding .= "geen email ingevuld <br>";
+  }
+    echo $foutmelding;
+  }
+} else if(isset($_POST['submitLogin'])){ 
+  //controle data
+  $uuid           = $_POST['uuid4'];
+  $email          = $_POST['email'];
+  $password       = $_POST['password'];
+  if (strlen($email) > 0 && strlen($password) > 0) {
+    $user = new loginHandler($uuid,$email,$password);
+    $user->loginCheck();
+} else {
     $foutmelding = "";
-    if (strlen($studentnummer) < 2) {
-      $foutmelding .= "geen studentnummer ingevuld <br>";
-    }
-    else if (strlen($klas) < 2) {
-      $foutmelding .= "geen klas ingevuld <br>";
-    }
-    else if (strlen($naam) < 0) {
-      $foutmelding .= "geen naam ingevuld <br>";
-    }
-    else if (strlen($adres) < 0) {
-      $foutmelding .= "geen adres ingevuld <br>";
-    }
-    else if (strlen($postcode) == 0) {
-      $foutmelding .= "geen postcode ingevuld <br>";
-    } 
-    else if (strlen($woonplaats) < 0) {
-      $foutmelding .= "geen woonplaats ingevuld <br>";
-    }
-    else if (strlen($leeftijd) < 0) {
-      $foutmelding .= "geen leeftijd ingevuld <br>";
-    }
-    else if (strlen($email) == 0) {
+    if (strlen($email) < 2) {
       $foutmelding .= "geen email ingevuld <br>";
     }
-      echo $foutmelding;
+    else if (strlen($password) < 2) {
+      $foutmelding .= "geen password ingevuld <br>";
     }
-}    
+    echo $foutmelding;
+  }
+}
 
 //Log in
 if(isset($_POST['submitLogin'])){ //check if form was submitted

@@ -1,20 +1,11 @@
 in functions:
-> checken welke form het vanaf komt
-> kijken of alle velden in gevuld zijn
-> leeftijd controleren
-> email controleren
 > op vreemde tekens zoals ' en " controleren
 
 logic:
-> class maken
-> bepalen welke vars private/public of protected zijn
-> class invullen, op naam? in cookie
 > UUID in cookie?
 > email in cookie?
-> connection met DB
-> gegevens in DB zetten
 > output doorsturen naar functions/client
 
-
-index:
-> UUID fixen
+> cookies
+> encryption password?
+> last active time stamp fixen

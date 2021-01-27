@@ -20,6 +20,7 @@ class registerProfile {
   public $leeftijd;
   public $email;
   private $password;
+  protected $Bpass;
   protected $pdo;
 
   function __construct($_uuid, $_name, $_stNummer, $_klas, $_adres, $_postcode, $_woonplaats, $_leeftijd, $_email) {
@@ -35,7 +36,8 @@ class registerProfile {
     $dbh = new Dbh;
     $pdo = $dbh->connect();
     $this->pdo = $pdo;
-    $this->password = $this->randomPassword();
+    $this->Bpass = $this->randomPassword();
+    $this->password = hash("sha3-256", $this->Bpass, FALSE);
   }
 
   function smtpmailer($to, $from, $from_name, $subject, $body)
@@ -69,7 +71,7 @@ class registerProfile {
     else 
     {
       $error = "Thanks You !! Your email is sent.";  
-      return $error;
+      // return $error;
     }
   }
 
@@ -91,7 +93,7 @@ class registerProfile {
     $subj = 'Bedankt voor het registeren';
     //random password gen
    
-    $msg = 'Hallo '.$this->name.',<br><br>Bedankt voor het registeren en hierbij ontvangt u ook uw wachtwoord. Deze kunt in de profile settings veranderen.<br>Wachtwoord: '.$this->password.'<br><br>Klik <a href="https://83502.ict-lab.nl/mock-examen-enquette/enquette.php">hier</a> om regisstratie af te ronden<br><br>Met vriendelijke groet,<br><br>Quinten Kempers';
+    $msg = 'Hallo '.$this->name.',<br><br>Bedankt voor het registeren en hierbij ontvangt u ook uw wachtwoord. Deze kunt in de profile settings veranderen.<br>Wachtwoord: '.$this->Bpass.'<br><br>Klik <a href="https://83502.ict-lab.nl/mock-examen-enquette/enquette.php">hier</a> om regisstratie af te ronden<br><br>Met vriendelijke groet,<br><br>Quinten Kempers';
     
     $error=$this->smtpmailer($to,$from, $name ,$subj, $msg);
     echo $error;
@@ -124,7 +126,7 @@ class registerProfile {
     if ($stmt2->execute()) {
       if ($stmt->execute()) {
         setcookie('uuid', $this->uuid, time() + (86400 * 30), "/"); // 86400 = 1 day
-        echo 'inserted';
+        // echo 'inserted';
       } else {
         echo 'first fail';
       }
@@ -146,7 +148,7 @@ class loginHandler {
   function __construct($_uuid, $_email, $_password) {
     $this->uuid = $_uuid;
     $this->email = $_email;
-    $this->password = $_password;
+    $this->password = hash("sha3-256", $_password, FALSE);
     $dbh = new Dbh;
     $pdo = $dbh->connect();
     $this->pdo = $pdo;
@@ -169,13 +171,17 @@ class loginHandler {
         //redirect naar enquette site
         setcookie('uuid', $this->uuid, time() + (86400 * 30), "/"); // 86400 = 1 day
         header('Location: enquette.php', true, 303);
-        echo 'login done';
+        // echo 'login done';
       } else {
+        $foutmelding .= $this->password;
+        var_dump($this->password.' password');
+        $foutmelding .= '<br>'.$res['password'];
         $foutmelding .= "geen gelding wachtwoord ingevuld";
       }
     } else {
+      
       $foutmelding .= "geen geldig email ingevuld";
     }
-    echo '\n<br>'.$foutmelding;
+    echo '<br>'.$foutmelding;
   }
 }

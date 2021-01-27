@@ -8,10 +8,14 @@ require 'config.inc.php';
 include('php/functions.php');
 include 'php/logic.php'; 
 
-if(isset($_COOKIE['uuid'])) {
-  header('Location: enquette.php', true, 303);
-  die();
+if(isset($_GET['logout'])) {
+  setcookie('uuid', null, 0, '/');    
+  header('Location: index.php');
+  exit;
 }
+
+// print_r(hash_algos());
+// echo hash("sha3-256", "secret", FALSE);
 
 function v4() {
   return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -51,6 +55,11 @@ $uuid = v4();
 </head>
 <body>
   <h1>GLR enquette site</h1>
+  <div id="redirectScreen">
+    Pls check mail voor de link
+    <br>
+    or make new account <a href="?logout">here</a>
+  </div>
   <div id="splashScreen">
     <div>
       <a href="#" id="signUpBtn">Sign up</a>

@@ -6,6 +6,20 @@ logic:
 > email in cookie?
 > output doorsturen naar functions/client
 
-> cookies
 > encryption password?
-> last active time stamp fixen
+> last active time stamp fixen on new login/logout
+> automatic logour after x time
+
+
+> errors beter vermelden/verwworden
+
+
+
+
+
+
+
+
+
+header fixen
+eerst backk up

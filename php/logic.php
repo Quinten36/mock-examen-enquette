@@ -88,10 +88,10 @@ class registerProfile {
     $to   = $this->email;
     $from = 'qkempers36@gmail.com';
     $name = 'Quinten Kempers';
-    $subj = 'PHPMailer 5.2 testing from DomainRacer';
+    $subj = 'Bedankt voor het registeren';
     //random password gen
    
-    $msg = 'This is mail about testing mailing using PHP.\n Your password is: '. $this->password;
+    $msg = 'Hallo '.$this->name.',<br><br>Bedankt voor het registeren en hierbij ontvangt u ook uw wachtwoord. Deze kunt in de profile settings veranderen.<br>Wachtwoord: '.$this->password.'<br><br>Klik <a href="https://83502.ict-lab.nl/mock-examen-enquette/enquette.php">hier</a> om regisstratie af te ronden<br><br>Met vriendelijke groet,<br><br>Quinten Kempers';
     
     $error=$this->smtpmailer($to,$from, $name ,$subj, $msg);
     echo $error;

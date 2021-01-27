@@ -93,5 +93,3 @@ function alertFunc() {
     $('#redirectScreen').show();
   } 
 }
-
-myFunction();

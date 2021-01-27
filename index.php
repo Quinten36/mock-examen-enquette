@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <?php 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -44,7 +45,6 @@ $uuid = v4();
 
 // require_once 'session.inc.php';
 ?>
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -102,6 +102,9 @@ $uuid = v4();
     <a href="#" id="backBtn">Go back</a>
   </div>
   <script src="js/main.js"></script>
+  <script>
+    myFunction();
+  </script>
 </body>
 </html>
 <?php

@@ -2,14 +2,29 @@ in functions:
 > op vreemde tekens zoals ' en " controleren
 
 logic:
-> UUID in cookie?
-> email in cookie?
 > output doorsturen naar functions/client
 
 > last active time stamp fixen on new login/logout
-> automatic logour after x time
 
+> automatic logout after x time
 
-> errors beter vermelden/verwworden
+> errors beter vermelden/verwoorden
 
-> preformance fixen
+> only show edit enquette if enquette is already filled in
+  > if button edit is pressed redirct to local but so that php can catch it
+
+> get cookie check???
+
+> custom alerts
+
+> with uuid in cookie on login page trippy mail sending?
+
+> when clicking on a name in the over the student info need to pop up
+
+> new user goes to teacher overview. fixt??
+
+> klas altijd full caps naar db sturen
+
+> fetched data for edit cachen?
+
+> bij elke inlog lastActive update

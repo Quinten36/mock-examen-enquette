@@ -72,14 +72,14 @@ $uuid = v4();
         <fieldset>
           <legend>Sign up</legend>
           <input type="hidden" id="uuid4" name="uuid4" value="<?php echo $uuid ?>">
-          <label for="">Studentnummer: </label><input type="number" id="stNummerInput" name="studentnummer" placeholder="Vul hier uw studentnummer in">
-          <label for="">Klas: </label><input type="text" id="klasInput" name="klas" placeholder="Vul hier uw klas in">
-          <label for="">Naam: </label><input type="text" id="naamInput" name="naam" placeholder="Vul hier uw naam in">
-          <label for="">Adres: </label><input type="text" id="adresInput" name="adres" placeholder="Vul hier uw adres in">
-          <label for="">Postcode: </label><input type="text" id="postcodeInput" name="postcode" placeholder="Vul hier uw postcode in">
-          <label for="">Woonplaats: </label><input type="text" id="woonplaatsInput" name="woonplaats" placeholder="Vul hier uw woonplaats in">
-          <label for="">Leeftijd: </label><input type="number" id="leeftijdInput" name="leeftijd" placeholder="Vul hier uw leeftijd in">
-          <label for="">Email: </label><input type="email" id="emailInput" name="email" placeholder="Vul hier uw email in">
+          <label for="">Studentnummer: </label><input type="number" id="stNummerInput" name="studentnummer" placeholder="Vul hier uw studentnummer in"><br>
+          <label for="">Klas: </label><input type="text" id="klasInput" name="klas" placeholder="Vul hier uw klas in"><br>
+          <label for="">Naam: </label><input type="text" id="naamInput" name="naam" placeholder="Vul hier uw naam in"><br>
+          <label for="">Adres: </label><input type="text" id="adresInput" name="adres" placeholder="Vul hier uw adres in"><br>
+          <label for="">Postcode: </label><input type="text" id="postcodeInput" name="postcode" placeholder="Vul hier uw postcode in"><br>
+          <label for="">Woonplaats: </label><input type="text" id="woonplaatsInput" name="woonplaats" placeholder="Vul hier uw woonplaats in"><br>
+          <label for="">Leeftijd: </label><input type="number" id="leeftijdInput" name="leeftijd" placeholder="Vul hier uw leeftijd in"><br>
+          <label for="">Email: </label><input type="email" id="emailInput" name="email" placeholder="Vul hier uw email in"><br>
           <input type="submit" value="Verzenden" id="submitSignUp" name="submitSignUp">
         </fieldset>
       </form>
@@ -164,11 +164,10 @@ if(isset($_POST['submitSignUp'])){
   }
 } else if(isset($_POST['submitLogin'])){ 
   //controle data
-  $uuid           = $_POST['uuid4'];
   $email          = $_POST['email'];
   $password       = $_POST['password'];
   if (strlen($email) > 0 && strlen($password) > 0) {
-    $user = new loginHandler($uuid,$email,$password);
+    $user = new loginHandler($email,$password);
     $user->loginCheck();
 } else {
     $foutmelding = "";
